@@ -118,6 +118,24 @@ class Utilizador {
   }
 
   /**
+   * Admin: ativar/desativar conta
+   */
+  static async setActive(id, isActive) {
+    const result = await query('UPDATE utilizadores SET is_active = ? WHERE id = ?', [isActive ? 1 : 0, id]);
+    return result.affectedRows > 0;
+  }
+
+  /**
+   * Admin: alterar papel/tipo
+   */
+  static async setTipo(id, tipo) {
+    const allowed = ['C', 'P', 'A'];
+    if (!allowed.includes(tipo)) throw new Error('Tipo inválido');
+    const result = await query('UPDATE utilizadores SET tipo = ? WHERE id = ?', [tipo, id]);
+    return result.affectedRows > 0;
+  }
+
+  /**
    * Listagem paginada e filtrada.
    */
   static async findAllPaginated(filters = {}, options = { page: 1, limit: 10 }) {

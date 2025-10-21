@@ -26,10 +26,20 @@ const pool = mysql.createPool({
   namedPlaceholders: true
 });
 
-// Helper simples p/ queries
-async function query(sql, params = {}) {
+// Helper simples p/ queries (retorna apenas rows)
+async function query(sql, params = []) {
   const [rows] = await pool.execute(sql, params);
   return rows;
+}
+
+// Acesso direto ao execute (para quem precisa [rows, fields])
+async function execute(sql, params = []) {
+  return pool.execute(sql, params);
+}
+
+// Obter conexão para transações
+async function getConnection() {
+  return pool.getConnection();
 }
 
 // Health check ao arrancar
@@ -56,4 +66,4 @@ process.on('SIGINT', async () => {
   }
 });
 
-module.exports = { pool, query, ping, closePool };
+module.exports = { pool, query, execute, getConnection, ping, closePool };

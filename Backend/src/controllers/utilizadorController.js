@@ -10,6 +10,15 @@ class UtilizadorController {
     try {
       const { email, password, first_name, last_name, tipo, telefone, nif, morada, codigo_postal, localidade, provincia, distrito } = req.body;
 
+      // Validações básicas
+      const emailRegex = /.+@.+\..+/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ success: false, message: 'Email inválido' });
+      }
+      if (!password || password.length < 8) {
+        return res.status(400).json({ success: false, message: 'Password fraca (mín. 8)' });
+      }
+
       // Verifica se o utilizador já existe
       const existing = await Utilizador.findByEmail(email);
       if (existing) {
@@ -56,6 +65,18 @@ class UtilizadorController {
    */
   async listar(req, res) {
     try {
+      // Apenas administradores
+      if (req.user?.tipo !== 'A') {
+        return res.status(403).json({ success: false, message: 'Sem permissao' });
+      }
+
+      // Verifica NIF único (se fornecido)
+      if (nif) {
+        const nifExists = await Utilizador.findByNif(nif);
+        if (nifExists) {
+          return res.status(400).json({ success: false, message: 'NIF já registado' });
+        }
+      }
       const { page = 1, limit = 10, tipo, search } = req.query;
 
       const result = await Utilizador.findAllPaginated(
@@ -133,6 +154,42 @@ class UtilizadorController {
         success: false,
         message: 'Erro ao atualizar dados do utilizador'
       });
+    }
+  }
+
+  /**
+   * Admin: alterar estado (ativar/desativar)
+   */
+  async alterarEstado(req, res) {
+    try {
+      if (req.user?.tipo !== 'A') {
+        return res.status(403).json({ success: false, message: 'Sem permissao' });
+      }
+      const { id } = req.params;
+      const { is_active } = req.body;
+      const ok = await Utilizador.setActive(id, Boolean(is_active));
+      res.json({ success: ok });
+    } catch (error) {
+      logger.error('Erro ao alterar estado do utilizador', error);
+      res.status(500).json({ success: false, message: 'Erro ao alterar estado' });
+    }
+  }
+
+  /**
+   * Admin: alterar tipo/papel
+   */
+  async alterarRole(req, res) {
+    try {
+      if (req.user?.tipo !== 'A') {
+        return res.status(403).json({ success: false, message: 'Sem permissao' });
+      }
+      const { id } = req.params;
+      const { tipo } = req.body; // 'C' | 'P' | 'A'
+      const ok = await Utilizador.setTipo(id, tipo);
+      res.json({ success: ok });
+    } catch (error) {
+      logger.error('Erro ao alterar role do utilizador', error);
+      res.status(500).json({ success: false, message: 'Erro ao alterar role' });
     }
   }
 }

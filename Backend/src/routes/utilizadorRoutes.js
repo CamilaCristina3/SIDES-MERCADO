@@ -16,4 +16,10 @@ router.get('/perfil', authMiddleware, (req, res) => UtilizadorController.perfil(
 // Atualizar dados do perfil
 router.put('/atualizar', authMiddleware, (req, res) => UtilizadorController.atualizar(req, res));
 
+// Admin: alterar estado
+router.put('/:id/estado', authMiddleware, (req, res) => UtilizadorController.alterarEstado(req, res));
+
+// Admin: alterar role/tipo
+router.put('/:id/role', authMiddleware, (req, res) => UtilizadorController.alterarRole(req, res));
+
 module.exports = router;
