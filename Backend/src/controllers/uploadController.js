@@ -3,8 +3,8 @@ const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
 
-// Ensure uploads directory exists
-const uploadsDir = path.join(__dirname, '../../uploads')
+// Ensure uploads/images directory exists
+const uploadsDir = path.join(__dirname, '../../uploads/images')
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true })
 }
@@ -37,7 +37,7 @@ function uploadSingle(req, res) {
   // Multer populates req.file
   if (!req.file) return res.status(400).json({ success: false, message: 'Nenhuma imagem enviada' })
   const filename = req.file.filename
-  const urlPath = `/uploads/${filename}`
+  const urlPath = `/uploads/images/${filename}`
   return res.status(201).json({ success: true, filename, url: urlPath })
 }
 
@@ -45,4 +45,3 @@ module.exports = {
   multerUpload: upload.single('image'),
   uploadSingle,
 }
-
