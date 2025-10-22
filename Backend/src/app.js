@@ -1,6 +1,7 @@
 // src/app.js
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -19,6 +20,7 @@ const carrinhoRoutes = require('./routes/carrinhoRoutes');
 const pedidoRoutes = require('./routes/pedidoRoutes');
 const pagamentoRoutes = require('./routes/pagamentoRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 // 🔹 Registrar rotas principais
 app.use('/api/utilizadores', utilizadorRoutes);
@@ -31,6 +33,10 @@ app.use('/api/carrinho', carrinhoRoutes);
 app.use('/api/pedidos', pedidoRoutes);
 app.use('/api/pagamentos', pagamentoRoutes);
 app.use('/api/contactos', contactRoutes);
+app.use('/api/uploads', uploadRoutes);
+
+// Static files for uploaded images
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // 🔹 Teste rápido
 app.get('/', (req, res) => {
