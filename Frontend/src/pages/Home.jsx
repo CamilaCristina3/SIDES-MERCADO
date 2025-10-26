@@ -9,6 +9,7 @@ const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeCat, setActiveCat] = useState('Hortícolas')
+  const [catProducts, setCatProducts] = useState([])
   const { addItem } = useCart()
   const navigate = useNavigate()
 
@@ -51,6 +52,30 @@ const Home = () => {
     setFeaturedProducts(mockProducts)
     setLoading(false)
   }, [])
+
+  // Carrega produtos do backend por categoria quando possível
+  useEffect(() => {
+    let cancelled = false
+    async function loadFromApi() {
+      try {
+        const resp = await fetch('/api/categorias')
+        const json = await resp.json()
+        const norm = (s) => (s||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        const found = Array.isArray(json?.data) ? json.data.find((c) => norm(c.nome) === norm(activeCat)) : null
+        if (!found) throw new Error('categoria_nao_encontrada')
+        const r2 = await fetch(`/api/produtos?categoria_id=${encodeURIComponent(found.id)}&limit=12`)
+        const j2 = await r2.json()
+        if (!cancelled && j2?.success) {
+          const mapped = (j2.data?.products || []).map((p) => ({ id: p.id, name: p.nome, description: p.descricao, price: Number(p.preco||0), unit: p.unidade, available: !!p.disponivel, category: activeCat }))
+          setCatProducts(mapped)
+          return
+        }
+      } catch {}
+      if (!cancelled) setCatProducts(products.filter((p) => p.category === activeCat).slice(0, 8))
+    }
+    loadFromApi()
+    return () => { cancelled = true }
+  }, [activeCat, products])
 
   const handleAddToCart = (product) => {
     addItem(product)
@@ -126,7 +151,7 @@ const Home = () => {
             ))}
           </div>
           <div className="products-grid">
-            {featuredProducts.filter(p => p.category === activeCat).slice(0, 8).map((product) => (
+            {catProducts.map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
