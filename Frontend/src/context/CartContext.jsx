@@ -3,17 +3,28 @@ import React, { createContext, useContext, useMemo, useState } from 'react'
 const CartContext = createContext(null)
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState([]) // {id, nome, preco, imagem, quantity}
+  const [items, setItems] = useState([]) // normalized: {id, nome, preco, imagem, unit?, quantity}
+
+  function normalize(p) {
+    if (!p) return null
+    const nome = p.nome ?? p.name ?? 'Produto'
+    const preco = typeof p.preco === 'number' ? p.preco : (typeof p.price === 'number' ? p.price : 0)
+    const imagem = p.imagem ?? p.image ?? null
+    const unit = p.unit ?? p.unidade ?? undefined
+    return { id: p.id, nome, preco, imagem, unit }
+  }
 
   const addItem = (product) => {
+    const base = normalize(product)
+    if (!base || base.id == null) return
     setItems((prev) => {
-      const idx = prev.findIndex((it) => it.id === product.id)
+      const idx = prev.findIndex((it) => it.id === base.id)
       if (idx >= 0) {
         const copy = [...prev]
         copy[idx] = { ...copy[idx], quantity: copy[idx].quantity + 1 }
         return copy
       }
-      return [...prev, { ...product, quantity: 1 }]
+      return [...prev, { ...base, quantity: 1 }]
     })
   }
 
@@ -26,7 +37,7 @@ export function CartProvider({ children }) {
   const clear = () => setItems([])
 
   const count = items.reduce((sum, it) => sum + it.quantity, 0)
-  const total = items.reduce((sum, it) => sum + it.preco * it.quantity, 0)
+  const total = items.reduce((sum, it) => sum + (Number(it.preco) || 0) * it.quantity, 0)
 
   const value = useMemo(
     () => ({ items, addItem, increment, decrement, remove, clear, count, total }),
@@ -41,4 +52,3 @@ export function useCart() {
   if (!ctx) throw new Error('useCart must be used within CartProvider')
   return ctx
 }
-

@@ -27,7 +27,7 @@ export default function NovoProduto() {
           <div>
             <strong>Pré-visualização:</strong>
             <div style={{ marginTop: 8 }}>
-              <img src={imagem} alt="Produto" style={{ width: 180, borderRadius: 8 }} />
+              <img src={imagem} alt="Produto" loading="lazy" decoding="async" style={{ width: 180, borderRadius: 8 }} />
             </div>
           </div>
         )}
@@ -35,4 +35,3 @@ export default function NovoProduto() {
     </div>
   )
 }
-

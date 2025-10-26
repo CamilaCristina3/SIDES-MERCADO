@@ -1,5 +1,5 @@
 // sides-frontend/src/App.jsx
-import React from 'react';
+import React, { useMemo } from 'react';
 import { NavLink, Routes, Route, useNavigate } from 'react-router-dom';
 import { useCart } from './context/CartContext.jsx';
 import Home from './pages/Home.jsx';
@@ -19,10 +19,33 @@ import ClienteRegister from './pages/ClienteRegister.jsx';
 import ProdutorCadastro from './pages/ProdutorCadastro.jsx';
 import AdminUpload from './pages/AdminUpload.jsx';
 import NovoProduto from './components/NovoProduto.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
+import ProdutorDashboard from './pages/ProdutorDashboard.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import MinhasCompras from './pages/MinhasCompras.jsx';
 
 function Header() {
   const { count } = useCart();
   const navigate = useNavigate();
+  const auth = useMemo(() => {
+    if (typeof window === 'undefined') return { loggedIn: false };
+    try {
+      const token = localStorage.getItem('authToken');
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      const role = user?.tipo || user?.role || null; // 'A' admin | 'P' produtor | 'C' cliente
+      return { loggedIn: !!token, user, role };
+    } catch {
+      return { loggedIn: false };
+    }
+  }, []);
+
+  function logout() {
+    try {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+    } catch {}
+    navigate('/');
+  }
   return (
     <header className="header">
       <div className="container">
@@ -32,22 +55,52 @@ function Header() {
         <nav className="nav">
           <NavLink to="/sobre">Quem Somos</NavLink>
           <NavLink to="/solucoes">Soluções</NavLink>
+
           <details className="dropdown">
             <summary aria-haspopup="menu">Explorar</summary>
             <div className="submenu" role="menu">
               <NavLink to="/produtos" role="menuitem">Produtos</NavLink>
               <NavLink to="/categorias" role="menuitem">Categorias</NavLink>
               <NavLink to="/pagamentos" role="menuitem">Formas de Pagamento</NavLink>
+              <NavLink to="/minhas-compras" role="menuitem">Minhas Compras</NavLink>
             </div>
           </details>
+
           <details className="dropdown">
             <summary aria-haspopup="menu">Conta</summary>
             <div className="submenu" role="menu">
+              {/* Acesso geral */}
+              <NavLink to="/minhas-compras" role="menuitem">Minhas Compras</NavLink>
+              <NavLink to="/carrinho" role="menuitem">Carrinho</NavLink>
+              <NavLink to="/checkout" role="menuitem">Checkout</NavLink>
+
+              {/* Fluxo do produtor */}
               <NavLink to="/produtor/cadastro" role="menuitem">Sou Produtor</NavLink>
-              <NavLink to="/registo" role="menuitem">Registar</NavLink>
-              <NavLink to="/login" role="menuitem">Entrar</NavLink>
-              <NavLink to="/admin/login" role="menuitem">Admin</NavLink>
-              <NavLink to="/admin/novo-produto" role="menuitem">Novo Produto</NavLink>
+              {auth.role === 'P' && (
+                <NavLink to="/produtor" role="menuitem">Painel Produtor</NavLink>
+              )}
+
+              {/* Admin */}
+              <NavLink to="/admin/login" role="menuitem">Admin Login</NavLink>
+              {auth.role === 'A' && (
+                <>
+                  <NavLink to="/admin" role="menuitem">Painel Admin</NavLink>
+                  <NavLink to="/admin/upload" role="menuitem">Upload de Imagens</NavLink>
+                  <NavLink to="/admin/novo-produto" role="menuitem">Novo Produto</NavLink>
+                </>
+              )}
+
+              {/* Autenticação cliente */}
+              {!auth.loggedIn ? (
+                <>
+                  <NavLink to="/registo" role="menuitem">Registar</NavLink>
+                  <NavLink to="/login" role="menuitem">Entrar</NavLink>
+                </>
+              ) : (
+                <button onClick={logout} style={{ width: '100%', textAlign: 'left', background: 'transparent', border: 'none', padding: '8px 10px', cursor: 'pointer' }} role="menuitem">
+                  Sair
+                </button>
+              )}
             </div>
           </details>
         </nav>
@@ -87,20 +140,16 @@ export default function App() {
         <Route path="/produtor/cadastro" element={<ProdutorCadastro />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/upload" element={<AdminUpload />} />
+        <Route path="/admin" element={<ProtectedRoute role="A"><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/produtor" element={<ProtectedRoute role="P"><ProdutorDashboard /></ProtectedRoute>} />
         <Route path="/admin/novo-produto" element={<NovoProduto />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/carrinho" element={<Carrinho />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/minhas-compras" element={<MinhasCompras />} />
       </Routes>
       <ChatWidget />
-      <a
-        href="https://wa.me/258841234567?text=Ol%C3%A1%20SIDES%2C%20preciso%20de%20ajuda"
-        className="whatsapp-fab"
-        aria-label="Falar no WhatsApp"
-        target="_blank"
-        rel="noreferrer"
-        title="Falar no WhatsApp"
-      >WA</a>
+      {/* WhatsApp floating button removido por solicitação */}
       <SiteFooter />
     </div>
   );
@@ -123,7 +172,7 @@ function SiteFooter() {
           <strong>Contacto</strong>
           <div style={{ color: 'var(--text-light)' }}>
             <div>Email: <a href="mailto:info@sides.co.mz">info@sides.co.mz</a></div>
-            <div>Telefone: <a href="tel:+258841234567">+258 84 123 4567</a></div>
+            <div>Telefone: <a href="tel:+258852620360">+258 85 262 0360</a></div>
             <div>Endereço: Rua da Frente de Libertação, Nº56, Sommerschield, Maputo – Moçambique</div>
           </div>
         </div>
@@ -138,7 +187,7 @@ function SiteFooter() {
         <div style={{ width: '100%', marginTop: 10 }}>
           <a
             className="btn-whatsapp"
-            href="https://wa.me/258841234567?text=Ol%C3%A1%20SIDES%2C%20preciso%20de%20ajuda"
+            href="https://wa.me/258852620360?text=Ol%C3%A1%20SIDES%2C%20preciso%20de%20ajuda"
             target="_blank"
             rel="noreferrer"
             aria-label="Falar no WhatsApp"

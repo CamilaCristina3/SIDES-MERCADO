@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { apiFetch } from '@/lib/api'
 
 export default function UploadImagem({ onUpload }) {
   const [file, setFile] = useState(null)
@@ -14,7 +15,7 @@ export default function UploadImagem({ onUpload }) {
       setLoading(true)
       const fd = new FormData()
       fd.append('image', file)
-      const resp = await fetch('/api/uploads/image', {
+      const resp = await apiFetch('/uploads/image', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: fd,
@@ -39,4 +40,3 @@ export default function UploadImagem({ onUpload }) {
     </div>
   )
 }
-

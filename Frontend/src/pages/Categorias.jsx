@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react'
-import { mockProducts } from '../data/mockProducts'
+import { mockProducts } from '../data/products'
+import { imageUrl, onImgError } from '../utils/imageUrl'
 import { useCart } from '../context/CartContext.jsx'
 
 export default function Categorias() {
@@ -33,7 +34,7 @@ export default function Categorias() {
             {products.map((product) => (
               <div key={product.id} className="product-card">
                 <div className="product-image">
-                  <img src={product.imagem} alt={product.nome} />
+                  <img src={imageUrl(product.imagem)} onError={onImgError} alt={product.nome} loading="lazy" decoding="async" />
                 </div>
                 <div className="product-info">
                   <h3 className="product-name">{product.nome}</h3>
@@ -54,4 +55,3 @@ export default function Categorias() {
     </>
   )
 }
-

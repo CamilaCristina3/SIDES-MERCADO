@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { apiFetch } from '@/lib/api'
 
 export default function ProdutorCadastro() {
   const [form, setForm] = useState({
@@ -27,7 +28,7 @@ export default function ProdutorCadastro() {
     setLoading(true)
     try {
       const payload = { ...form, tipo: 'P' }
-      const res = await fetch('/api/utilizadores/register', {
+      const res = await apiFetch('/utilizadores/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -110,4 +111,3 @@ export default function ProdutorCadastro() {
     </section>
   )
 }
-

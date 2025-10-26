@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { apiFetch } from '@/lib/api'
 
 export default function ClienteLogin() {
   const navigate = useNavigate()
@@ -13,7 +14,7 @@ export default function ClienteLogin() {
     setError('')
     setLoading(true)
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await apiFetch('/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -57,4 +58,3 @@ export default function ClienteLogin() {
     </section>
   )
 }
-

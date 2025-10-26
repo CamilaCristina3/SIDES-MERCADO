@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { apiFetch } from '@/lib/api'
 
 export default function ClienteRegister() {
   const navigate = useNavigate()
@@ -25,7 +26,7 @@ export default function ClienteRegister() {
     setLoading(true)
     try {
       const payload = { ...form, tipo: 'C' }
-      const res = await fetch('/api/utilizadores/register', {
+      const res = await apiFetch('/utilizadores/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -79,4 +80,3 @@ export default function ClienteRegister() {
     </section>
   )
 }
-

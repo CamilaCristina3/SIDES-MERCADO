@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { apiFetch } from '@/lib/api'
 
 export default function AdminUpload() {
   const [file, setFile] = useState(null)
@@ -30,7 +31,7 @@ export default function AdminUpload() {
     try {
       const form = new FormData()
       form.append('image', file)
-      const resp = await fetch('/api/uploads/image', {
+      const resp = await apiFetch('/uploads/image', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -89,7 +90,7 @@ export default function AdminUpload() {
           {preview && (
             <div style={{ display: 'grid', gap: 8 }}>
               <strong>Pré-visualização:</strong>
-              <img src={preview} alt="Pré-visualização" style={{ maxWidth: '100%', borderRadius: 8, boxShadow: 'var(--shadow-sm)' }} />
+              <img src={preview} alt="Pré-visualização" loading="lazy" decoding="async" style={{ maxWidth: '100%', borderRadius: 8, boxShadow: 'var(--shadow-sm)' }} />
             </div>
           )}
 

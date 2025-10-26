@@ -1,0 +1,16 @@
+Options -Multiviews
+RewriteEngine On
+RewriteBase /
+
+# Serve existing files/directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Do NOT rewrite common asset/file extensions (so 404 stays 404)
+RewriteCond %{REQUEST_URI} \.(?:js|mjs|css|png|jpe?g|gif|svg|ico|webp|avif|json|txt|map|woff2?|ttf|otf|eot)$ [NC]
+RewriteRule ^ - [L]
+
+# SPA fallback for clean URLs (no dot in the path)
+RewriteCond %{REQUEST_URI} !\.[^/]+$
+RewriteRule ^ index.html [L]

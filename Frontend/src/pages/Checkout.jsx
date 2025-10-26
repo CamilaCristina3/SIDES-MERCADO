@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext.jsx'
 
@@ -9,27 +9,40 @@ export default function Checkout() {
   const navigate = useNavigate()
   const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : ''
 
-  const finalizar = (e) => {
+  const confirmar = (e) => {
     e.preventDefault()
-    if (items.length === 0) {
-      alert('Carrinho vazio')
-      return
-    }
+    if (items.length === 0) return alert('Carrinho vazio')
     if (!token) {
       alert('Para concluir a compra, por favor inicie sessão.')
-      navigate('/login')
-      return
+      return navigate('/login')
     }
+
+    const id = 'SIDES-' + Date.now().toString(36).toUpperCase().slice(-6)
+    const order = {
+      id,
+      items: items.map((it) => ({ id: it.id, nome: it.nome, preco: it.preco, quantity: it.quantity })),
+      total,
+      metodo,
+      pagamento,
+      status: 'Confirmada',
+      createdAt: Date.now(),
+    }
+    try {
+      const raw = localStorage.getItem('orders')
+      const list = raw ? JSON.parse(raw) : []
+      list.push(order)
+      localStorage.setItem('orders', JSON.stringify(list))
+    } catch {}
+
     if (pagamento === 'transferencia') {
-      const ref = 'SIDES-' + Math.random().toString(36).slice(2, 8).toUpperCase()
-      alert(`Gerada referência ${ref}. Por favor efetue a transferência e envie o comprovativo para info@sides.co.mz.`)
+      alert(`Encomenda ${id} criada. Geraremos os dados bancários em breve.`)
     } else if (['mpesa','emola','conta_movel'].includes(pagamento)) {
-      alert(`Pagamento via ${pagamento.toUpperCase()} será processado. Receberá confirmação por SMS/Email.`)
+      alert(`Encomenda ${id} criada. Pagamento via ${pagamento.toUpperCase()} será processado.`)
     } else if (pagamento === 'card') {
-      alert('Redirecionaremos para pagamento seguro por cartão (simulado).')
+      alert(`Encomenda ${id} criada. Redirecionamento para o pagamento (simulado).`)
     }
     clear()
-    navigate('/')
+    navigate('/minhas-compras')
   }
 
   return (
@@ -45,15 +58,14 @@ export default function Checkout() {
               <ul>
                 {items.map((it) => (
                   <li key={it.id}>
-                    {it.quantity} × {it.nome} —{' '}
-                    {(it.preco * it.quantity).toLocaleString('pt-MZ', { style: 'currency', currency: 'MZN' })}
+                    {it.quantity} x {it.nome} — {(it.preco * it.quantity).toLocaleString('pt-MZ', { style: 'currency', currency: 'MZN' })}
                   </li>
                 ))}
               </ul>
               <div style={{ marginTop: 8 }}><strong>Total: {total.toLocaleString('pt-MZ', { style: 'currency', currency: 'MZN' })}</strong></div>
             </div>
 
-            <form onSubmit={finalizar} style={{ display: 'grid', gap: 10 }}>
+            <form onSubmit={confirmar} style={{ display: 'grid', gap: 10 }}>
               <div>
                 <label>
                   <input type="radio" name="metodo" value="entrega" checked={metodo === 'entrega'} onChange={() => setMetodo('entrega')} />
@@ -88,7 +100,7 @@ export default function Checkout() {
                 </p>
               </div>
 
-              <button type="submit">Finalizar Compra</button>
+              <button type="submit">Confirmar Encomenda</button>
             </form>
           </>
         )}
@@ -96,3 +108,4 @@ export default function Checkout() {
     </section>
   )
 }
+

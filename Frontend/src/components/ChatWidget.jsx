@@ -11,7 +11,7 @@ export default function ChatWidget() {
     { q: ['como me registro', 'como me registo', 'cadastro', 'registo'], a: 'Para se registar, aceda ao menu “Cadastre” no topo e preencha os seus dados. Se preferir, vá direto: /cadastro' },
     { q: ['navegar', 'como navegar', 'como uso', 'ajuda'], a: 'Use o menu para explorar: Produtos, Categorias, Quem Somos e Formas de Pagamento. Para comprar, adicione itens ao carrinho e siga para o Checkout.' },
     { q: ['pagamento', 'mpesa', 'visa', 'cartão', 'transferência', 'emola', 'conta móvel'], a: 'Aceitamos Mpesa (Vodacom), E-Mola (Tmcel), Conta Móvel (Movitel), cartões via Visa/Mastercard e transferência bancária. Veja detalhes em /pagamentos.' },
-    { q: ['falar com humano', 'atendente', 'contacto', 'contato', 'suporte'], a: 'Claro! Envie um email para info@sides.co.mz ou ligue +258 84 123 4567. Em breve ofereceremos chat humano integrado.' },
+    { q: ['falar com humano', 'atendente', 'contacto', 'contato', 'suporte'], a: 'Claro! Envie um email para info@sides.co.mz ou ligue +258 85 262 0360. Em breve ofereceremos chat humano integrado.' },
   ]), [])
 
   function findAnswer(text) {
@@ -19,7 +19,7 @@ export default function ChatWidget() {
     for (const item of faqs) {
       if (item.q.some(k => t.includes(k))) return item.a
     }
-    return 'Posso ajudar com registo, navegação e pagamentos. Para suporte humano: info@sides.co.mz ou +258 84 123 4567.'
+    return 'Posso ajudar com registo, navegação e pagamentos. Para suporte humano: info@sides.co.mz ou +258 85 262 0360.'
   }
 
   function sendMessage(e) {
@@ -74,4 +74,3 @@ export default function ChatWidget() {
     </>
   )
 }
-

@@ -6,19 +6,22 @@ export default function Sobre() {
       <div className="container" style={{ maxWidth: 900, display: 'grid', gap: 16 }}>
         <h2>Quem Somos</h2>
         <p>
-          A SIDES é uma empresa moçambicana focada em promover o desenvolvimento sustentável
-          via soluções digitais para o agronegócio e turismo comunitário.
+           Acesso direto aos melhores produtos agrícolas, frescos da quinta para sua mesa. 
+           Conheça a história por trás de cada produto e apoie agricultores locais.
         </p>
 
         <h3>Nossa Missão</h3>
         <p>
-          Empoderar produtores agrícolas e comunidades turísticas com inclusão financeira e comércio justo.
+          Conectar diretamente produtores agrícolas com consumidores finais e empresas, 
+          garantindo preços justos para ambos os lados. 
+          Promovemos o comércio sustentável e o acesso a produtos frescos e de qualidade.
         </p>
 
         <h3>Nossa Visão</h3>
         <p>
-          Ser a principal plataforma digital sustentável de Moçambique, conectando comunidades ao mercado
-          com inovação e impacto positivo.
+         Ser a principal plataforma digital de comércio agrícola em Moçambique, 
+        revolucionando a forma como produtores e consumidores se conectam. 
+        Queremos construir uma comunidade sustentável onde todos beneficiam.
         </p>
 
         <h3>Valores</h3>

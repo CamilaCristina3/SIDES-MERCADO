@@ -1,0 +1,18 @@
+// IMPORTANT: Image filenames must match the files that
+// exist on the server under `/public_html/uploads/images`.
+// We align names (including case, accents and extensions)
+// to avoid 404s on Linux hosting.
+export const mockProducts = [
+  { id: 1, nome: 'Alface', preco: 2.5, imagem: 'Alface.png', categoria: 'Hortifruti' },
+  { id: 2, nome: 'Brócolis', preco: 5.0, imagem: 'Brócolis.png', categoria: 'Hortifruti' },
+  { id: 3, nome: 'Pimentão', preco: 3.5, imagem: 'Pimentão.png', categoria: 'Hortifruti' },
+  { id: 4, nome: 'Banana', preco: 4.0, imagem: 'Banana.webp', categoria: 'Hortifruti' },
+  { id: 5, nome: 'Maçã', preco: 4.5, imagem: 'Maçã.png', categoria: 'Hortifruti' },
+  { id: 6, nome: 'Cenoura', preco: 2.0, imagem: 'Cenoura.png', categoria: 'Hortifruti' },
+  { id: 7, nome: 'Couve', preco: 3.0, imagem: 'Couve.png', categoria: 'Hortifruti' },
+  { id: 8, nome: 'Feijão Manteiga', preco: 8.0, imagem: 'Feijão manteiga.jpg', categoria: 'Grãos e Leguminosas' },
+  // For items without an exact image on the server, use a close match so
+  // something is shown while content is prepared.
+  { id: 9, nome: 'Abacate', preco: 10.0, imagem: 'Caju.webp', categoria: 'Frutas' },
+  { id: 10, nome: 'Amendoim', preco: 6.0, imagem: 'coco.webp', categoria: 'Grãos e Leguminosas' },
+]

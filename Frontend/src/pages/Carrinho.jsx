@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext.jsx'
+import { imageUrl, onImgError } from '../utils/imageUrl'
 
 export default function Carrinho() {
   const { items, increment, decrement, remove, clear, total } = useCart()
@@ -17,7 +18,7 @@ export default function Carrinho() {
             <div style={{ display: 'grid', gap: 10, marginTop: 12 }}>
               {items.map((it) => (
                 <div key={it.id} style={{ display: 'flex', gap: 10, alignItems: 'center', background: '#fff', padding: 10, borderRadius: 10 }}>
-                  <img src={it.imagem} alt={it.nome} style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 8 }} />
+                  <img src={imageUrl(it.imagem)} onError={onImgError} alt={it.nome} loading="lazy" decoding="async" style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 8 }} />
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 600 }}>{it.nome}</div>
                     <div>{it.preco.toLocaleString('pt-MZ', { style: 'currency', currency: 'MZN' })}</div>
@@ -47,4 +48,3 @@ export default function Carrinho() {
     </section>
   )
 }
-
