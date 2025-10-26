@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { apiFetch } from '@/lib/api'
+import { apiFetchJson } from '@/lib/api'
 
 export default function AdminUpload() {
   const [file, setFile] = useState(null)
@@ -31,15 +31,14 @@ export default function AdminUpload() {
     try {
       const form = new FormData()
       form.append('image', file)
-      const resp = await apiFetch('/uploads/image', {
+      const { resp, data } = await apiFetchJson('/uploads/image', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
         },
         body: form,
       })
-      const data = await resp.json()
-      if (!resp.ok) throw new Error(data?.message || 'Falha no upload')
+      if (!resp.ok) throw new Error((data && (data.message || data.error)) || 'Falha no upload')
       setResult(data)
       setStatus('done')
       if (remember) localStorage.setItem('authToken', token)

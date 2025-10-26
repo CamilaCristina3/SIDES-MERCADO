@@ -17,8 +17,29 @@ export function apiUrl(path = '/') {
 
 export async function apiFetch(path, options = {}) {
   const url = apiUrl(path)
-  return fetch(url, options)
+  const headers = { Accept: 'application/json', ...(options.headers || {}) }
+  return fetch(url, { ...options, headers })
+}
+
+function looksJson(resp) {
+  const ct = resp?.headers?.get?.('content-type') || ''
+  return ct.includes('application/json') || ct.includes('application/problem+json')
+}
+
+export async function apiFetchJson(path, options = {}) {
+  const resp = await apiFetch(path, options)
+  let data = null
+  try {
+    if (looksJson(resp)) {
+      data = await resp.json()
+    } else {
+      const text = await resp.text()
+      data = text ? JSON.parse(text) : null
+    }
+  } catch {
+    data = null
+  }
+  return { resp, data }
 }
 
 export const API_BASE = RAW_BASE
-

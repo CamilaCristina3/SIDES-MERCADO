@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import About from '../components/About/About'
 import { useCart } from '../context/CartContext.jsx'
 import ProductCard from '../components/ProductCard/ProductCard'
+import { apiFetchJson } from '../lib/api.js'
 
 const Home = () => {
   const [products, setProducts] = useState([])
@@ -58,13 +59,11 @@ const Home = () => {
     let cancelled = false
     async function loadFromApi() {
       try {
-        const resp = await fetch('/api/categorias')
-        const json = await resp.json()
+        const { data: json } = await apiFetchJson('/categorias')
         const norm = (s) => (s||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
         const found = Array.isArray(json?.data) ? json.data.find((c) => norm(c.nome) === norm(activeCat)) : null
         if (!found) throw new Error('categoria_nao_encontrada')
-        const r2 = await fetch(`/api/produtos?categoria_id=${encodeURIComponent(found.id)}&limit=12`)
-        const j2 = await r2.json()
+        const { data: j2 } = await apiFetchJson(`/produtos?categoria_id=${encodeURIComponent(found.id)}&limit=12`)
         if (!cancelled && j2?.success) {
           const mapped = (j2.data?.products || []).map((p) => ({ id: p.id, name: p.nome, description: p.descricao, price: Number(p.preco||0), unit: p.unidade, available: !!p.disponivel, category: activeCat }))
           setCatProducts(mapped)
