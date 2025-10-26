@@ -8,6 +8,7 @@ const Home = () => {
   const [products, setProducts] = useState([])
   const [featuredProducts, setFeaturedProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [activeCat, setActiveCat] = useState('Hortícolas')
   const { addItem } = useCart()
   const navigate = useNavigate()
 
@@ -39,9 +40,15 @@ const Home = () => {
       // ERVAS AROMÁTICAS
       { id: 17, name: 'Manjericão Fresco', price: 1.50, description: 'Manjericão fresco, aroma intenso para pizzas e pesto', category: 'Ervas Aromáticas', available: true, unit: 'molho', supplier: 'Ervas do Chefe', rating: 4.8 },
       { id: 18, name: 'Salsa e Coentros', price: 1.20, description: 'Mix de salsa e coentros frescos, para temperar', category: 'Ervas Aromáticas', available: true, unit: 'molho', supplier: 'Aromas do Campo', rating: 4.6 },
+      // NOVAS CATEGORIAS DO LAYOUT
+      { id: 19, name: 'Camarão Médio', price: 12.90, description: 'Camarão fresco do Índico', category: 'Mariscos', available: true, unit: 'kg' },
+      { id: 20, name: 'Polvo', price: 19.90, description: 'Polvo do mar, ideal para grelha', category: 'Frutos do Mar', available: true, unit: 'kg' },
+      { id: 21, name: 'Tilápia', price: 9.90, description: 'Tilápia fresca', category: 'Peixes', available: true, unit: 'kg' },
+      { id: 22, name: 'Carne de Vaca', price: 15.90, description: 'Cortes selecionados de vaca', category: 'Carnes Vermelhas', available: true, unit: 'kg' },
+      { id: 23, name: 'Frango de Campo', price: 7.50, description: 'Frango fresco', category: 'Carnes Brancas (Aves)', available: true, unit: 'kg' },
     ]
     setProducts(mockProducts)
-    setFeaturedProducts(mockProducts.slice(0, 8))
+    setFeaturedProducts(mockProducts)
     setLoading(false)
   }, [])
 
@@ -74,14 +81,13 @@ const Home = () => {
           <div className="hero-inner">
             <div className="hero-content">
               <span className="badge">🌱 100% Produtos Locais</span>
-              <h2>Da  Terra para o Consumidor </h2>
+              <h2>Consuma o Que é Nosso — Produtos Frescos e Locais</h2>
               <p>
-                Conectamos diretamente produtores agrícolas a consumidores e empresas.
-                Produtos frescos, preços justos e comércio sustentável.
+                Apoie a produção local moçambicana. Conectamos produtores agrícolas a consumidores e empresas com preços justos e logística eficiente.
               </p>
               <div className="hero-actions">
-                <button className="cta-button" onClick={() => navigate('/produtos')}>Comprar Agora</button>
-                <button className="ghost-button" onClick={() => navigate('/produtor/cadastro')}>Ser Produtor</button>
+                <button className="cta-button" onClick={() => navigate('/produtos')}>Explorar Produtos</button>
+                <button className="ghost-button" onClick={() => navigate('/produtor/cadastro')}>Seja um Agricultor</button>
               </div>
 
               {/* KPIs do Hero */}
@@ -98,20 +104,36 @@ const Home = () => {
       {/* Sobre Nós */}
       <About />
 
-      {/* Categorias */}
-      <section className="how-section" id="categories">
+      {/* Categorias de Produtos (filtro dinâmico) */}
+      <section className="products-section" id="categories">
         <div className="container">
           <div className="section-header">
-            <h2>Nossas Categorias</h2>
-            <p>Descubra a variedade de produtos agrícolas disponíveis</p>
+            <h2>Categorias de Produtos</h2>
+            <p>Exibimos apenas os itens da categoria escolhida</p>
           </div>
-          <div className="how-cards">
-            <div className="how-card"><div className="how-icon">🥬</div><h3>Verduras</h3><p>Espinafres, alface, couve e outras verduras frescas</p></div>
-            <div className="how-card"><div className="how-icon">🥦</div><h3>Hortícolas</h3><p>Tomate, cenoura, pimento e outros produtos hortícolas</p></div>
-            <div className="how-card"><div className="how-icon">🌾</div><h3>Cereais</h3><p>Arroz, aveia, trigo e outros cereais nacionais</p></div>
-            <div className="how-card"><div className="how-icon">🍎</div><h3>Frutas</h3><p>Maçãs, laranjas, morangos e frutas da época</p></div>
-            <div className="how-card"><div className="how-icon">🫘</div><h3>Leguminosas</h3><p>Feijão, grão-de-bico, lentilhas e outras leguminosas</p></div>
-            <div className="how-card"><div className="how-icon">🥔</div><h3>Raízes</h3><p>Batata, batata-doce, cebola e outros tubérculos</p></div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '0 16px 16px' }}>
+            {['Hortícolas','Verduras','Frutas','Mariscos','Frutos do Mar','Peixes','Cereais','Carnes Vermelhas','Carnes Brancas (Aves)'].map((c) => (
+              <button
+                key={c}
+                onClick={() => setActiveCat(c)}
+                className="icon-btn"
+                style={{
+                  background: activeCat === c ? '#eef3ec' : 'transparent',
+                  borderColor: activeCat === c ? 'var(--primary-color)' : '#d1d5db',
+                  color: activeCat === c ? 'var(--primary-color)' : 'var(--text-dark)'
+                }}
+              >{c}</button>
+            ))}
+          </div>
+          <div className="products-grid">
+            {featuredProducts.filter(p => p.category === activeCat).slice(0, 8).map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={handleAddToCart}
+                onToggleFavorite={handleToggleFavorite}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -134,6 +156,23 @@ const Home = () => {
         </div>
         <div className="section-footer" style={{ textAlign: 'center', marginTop: '2rem' }}>
           <button className="btn-outline" onClick={() => navigate('/produtos')}>Ver Todos os Produtos</button>
+        </div>
+      </section>
+
+      {/* Modalidades de Pagamento */}
+      <section className="how-section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Modalidades de Pagamento</h2>
+            <p>Mpesa, e-Mola, Conta Móvel, Cartão de Débito e Transferência</p>
+          </div>
+          <div className="how-cards">
+            <div className="how-card"><div className="how-icon">📱</div><h3>Mpesa</h3><p>Pagamento móvel rápido</p></div>
+            <div className="how-card"><div className="how-icon">📱</div><h3>e-Mola</h3><p>Pagamento mobile</p></div>
+            <div className="how-card"><div className="how-icon">📱</div><h3>Conta Móvel</h3><p>Transferência via telemóvel</p></div>
+            <div className="how-card"><div className="how-icon">💳</div><h3>Cartão de Débito</h3><p>Visa, MasterCard</p></div>
+            <div className="how-card"><div className="how-icon">🏦</div><h3>Transferência Bancária</h3><p>IBAN/Conta</p></div>
+          </div>
         </div>
       </section>
 

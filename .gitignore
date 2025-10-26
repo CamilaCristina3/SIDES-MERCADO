@@ -25,3 +25,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 *.log
+
+# deployment archives (do not commit build artifacts)
+Frontend/dist_upload.zip
+Frontend/dist_upload.tar.gz
+Backend/uploads.zip

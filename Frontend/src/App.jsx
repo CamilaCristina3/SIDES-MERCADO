@@ -69,11 +69,6 @@ function Header() {
           <details className="dropdown">
             <summary aria-haspopup="menu">Conta</summary>
             <div className="submenu" role="menu">
-              {/* Acesso geral */}
-              <NavLink to="/minhas-compras" role="menuitem">Minhas Compras</NavLink>
-              <NavLink to="/carrinho" role="menuitem">Carrinho</NavLink>
-              <NavLink to="/checkout" role="menuitem">Checkout</NavLink>
-
               {/* Fluxo do produtor */}
               <NavLink to="/produtor/cadastro" role="menuitem">Sou Produtor</NavLink>
               {auth.role === 'P' && (
@@ -93,7 +88,7 @@ function Header() {
               {/* Autenticação cliente */}
               {!auth.loggedIn ? (
                 <>
-                  <NavLink to="/registo" role="menuitem">Registar</NavLink>
+                  <NavLink to="/registo" role="menuitem">Registrar</NavLink>
                   <NavLink to="/login" role="menuitem">Entrar</NavLink>
                 </>
               ) : (
@@ -160,41 +155,49 @@ function SiteFooter() {
   const IG = import.meta.env.VITE_INSTAGRAM_URL || 'https://instagram.com';
   const LI = import.meta.env.VITE_LINKEDIN_URL || 'https://linkedin.com';
   return (
-    <footer className="footer">
+    <footer className="footer footer-dark">
       <div className="container" style={{ alignItems: 'flex-start' }}>
-        <div style={{ flex: 2, minWidth: 260 }}>
-          <h3 style={{ marginBottom: 8 }}>SIDES - Sistema Integrado de Desempenho Sustentável, Lda.</h3>
+        <div style={{ flex: 1.6, minWidth: 260 }}>
+          <h3 style={{ marginBottom: 8 }}>SIDES - Sistema Integrado de Desenvolvimento Sustentável, Lda.</h3>
           <p style={{ color: 'var(--text-light)' }}>
-            “Promovendo o desenvolvimento sustentável através do agronegócio e do turismo consciente em Moçambique.”
+            Promovemos o desenvolvimento sustentável através do agronegócio e do turismo consciente em Moçambique.
           </p>
+        </div>
+        <div style={{ flex: 1, minWidth: 180 }}>
+          <strong>Links Rápidos</strong>
+          <div className="links-grid">
+            <a href="/sobre">Sobre Nós</a>
+            <a href="#">Termos de Serviço</a>
+            <a href="#">Política de Privacidade</a>
+            <a href="#">FAQ</a>
+          </div>
         </div>
         <div style={{ flex: 1, minWidth: 200 }}>
           <strong>Contacto</strong>
           <div style={{ color: 'var(--text-light)' }}>
             <div>Email: <a href="mailto:info@sides.co.mz">info@sides.co.mz</a></div>
             <div>Telefone: <a href="tel:+258852620360">+258 85 262 0360</a></div>
-            <div>Endereço: Rua da Frente de Libertação, Nº56, Sommerschield, Maputo – Moçambique</div>
+            <div>Endereço: Rua da Frente de Libertação, N°56, Sommerschield</div>
+            <div style={{ marginTop: 8 }}>
+              <a
+                className="btn-whatsapp"
+                href="https://wa.me/258852620360?text=Ol%C3%A1%20SIDES%2C%20preciso%20de%20ajuda"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="WhatsApp"
+              >
+                WhatsApp
+              </a>
+            </div>
           </div>
         </div>
         <div style={{ flex: 1, minWidth: 200 }}>
-          <strong>Redes sociais</strong>
+          <strong>Redes Sociais</strong>
           <div className="socials" style={{ marginTop: 6 }}>
             <a href={FB} target="_blank" rel="noreferrer" aria-label="Facebook">Facebook</a>
             <a href={IG} target="_blank" rel="noreferrer" aria-label="Instagram">Instagram</a>
             <a href={LI} target="_blank" rel="noreferrer" aria-label="LinkedIn">LinkedIn</a>
           </div>
-        </div>
-        <div style={{ width: '100%', marginTop: 10 }}>
-          <a
-            className="btn-whatsapp"
-            href="https://wa.me/258852620360?text=Ol%C3%A1%20SIDES%2C%20preciso%20de%20ajuda"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Falar no WhatsApp"
-          >
-            WhatsApp
-          </a>
-          <span style={{ marginLeft: 8, color: 'var(--text-light)' }}>Atendimento rápido</span>
         </div>
       </div>
     </footer>
