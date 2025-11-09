@@ -35,8 +35,15 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
+    emptyOutDir: true,
     rollupOptions: {
       output: {
+        // Avoid preserving the full module graph in dist
+        // and ensure asset names are ASCII-only and hashed.
+        preserveModules: false,
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[hash][extname]',
         manualChunks: {
           vendor: ['react', 'react-dom']
         }

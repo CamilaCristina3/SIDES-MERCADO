@@ -1,0 +1,430 @@
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useCart } from '../context/CartContext.js'
+import { resolveProductImage } from '../utils/resolveImage'
+import { onImgError } from '../utils/imageUrl'
+import './Carrinho.css' // ou adicione os estilos no mesmo arquivo
+
+export default function Carrinho() {
+  const { items, increment, decrement, remove, clear, total } = useCart()
+  const navigate = useNavigate()
+
+  // Estilos CSS-in-JS para manter tudo no mesmo arquivo
+  const styles = {
+    container: {
+      maxWidth: '800px',
+      margin: '0 auto',
+      padding: '2rem 1rem'
+    },
+    header: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '2rem',
+      flexWrap: 'wrap',
+      gap: '1rem'
+    },
+    title: {
+      fontSize: '2rem',
+      fontWeight: '700',
+      color: 'var(--text-dark)',
+      margin: 0
+    },
+    emptyState: {
+      textAlign: 'center',
+      padding: '3rem 1rem',
+      background: 'var(--surface)',
+      borderRadius: 'var(--border-radius)',
+      boxShadow: 'var(--shadow-sm)'
+    },
+    emptyIcon: {
+      fontSize: '4rem',
+      marginBottom: '1rem',
+      opacity: 0.5
+    },
+    emptyText: {
+      fontSize: '1.2rem',
+      color: 'var(--text-light)',
+      marginBottom: '2rem'
+    },
+    cartItems: {
+      display: 'grid',
+      gap: '1rem',
+      marginBottom: '2rem'
+    },
+    cartItem: {
+      display: 'flex',
+      gap: '1rem',
+      alignItems: 'center',
+      background: 'var(--surface)',
+      padding: '1rem',
+      borderRadius: 'var(--border-radius)',
+      boxShadow: 'var(--shadow-sm)',
+      transition: 'var(--transition)',
+      flexWrap: 'wrap'
+    },
+    itemImage: {
+      width: '80px',
+      height: '80px',
+      objectFit: 'cover',
+      borderRadius: '8px',
+      flexShrink: 0
+    },
+    itemDetails: {
+      flex: '1',
+      minWidth: '200px'
+    },
+    itemName: {
+      fontWeight: '600',
+      fontSize: '1.1rem',
+      color: 'var(--text-dark)',
+      marginBottom: '0.5rem'
+    },
+    itemPrice: {
+      fontWeight: '700',
+      color: 'var(--primary-color)',
+      fontSize: '1.1rem'
+    },
+    itemActions: {
+      display: 'flex',
+      gap: '0.5rem',
+      alignItems: 'center',
+      flexWrap: 'wrap'
+    },
+    quantityControls: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      background: 'var(--bg-soft)',
+      padding: '0.25rem',
+      borderRadius: '8px'
+    },
+    quantityButton: {
+      background: 'var(--primary-color)',
+      color: 'white',
+      border: 'none',
+      width: '32px',
+      height: '32px',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      fontSize: '1.1rem',
+      fontWeight: '600',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      transition: 'var(--transition)'
+    },
+    quantityDisplay: {
+      minWidth: '40px',
+      textAlign: 'center',
+      fontWeight: '600',
+      fontSize: '1.1rem'
+    },
+    removeButton: {
+      background: 'transparent',
+      color: '#ef4444',
+      border: '1px solid #ef4444',
+      padding: '0.5rem 1rem',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      fontSize: '0.9rem',
+      fontWeight: '600',
+      transition: 'var(--transition)'
+    },
+    cartSummary: {
+      background: 'var(--surface)',
+      padding: '1.5rem',
+      borderRadius: 'var(--border-radius)',
+      boxShadow: 'var(--shadow-sm)',
+      marginTop: '2rem'
+    },
+    totalRow: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '1.5rem',
+      paddingBottom: '1rem',
+      borderBottom: '1px solid #e5e7eb'
+    },
+    totalLabel: {
+      fontSize: '1.3rem',
+      fontWeight: '600',
+      color: 'var(--text-dark)'
+    },
+    totalAmount: {
+      fontSize: '1.5rem',
+      fontWeight: '800',
+      color: 'var(--primary-color)'
+    },
+    actionButtons: {
+      display: 'flex',
+      gap: '1rem',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap'
+    },
+    clearButton: {
+      background: 'transparent',
+      color: 'var(--text-light)',
+      border: '1px solid #d1d5db',
+      padding: '0.75rem 1.5rem',
+      borderRadius: 'var(--border-radius)',
+      cursor: 'pointer',
+      fontWeight: '600',
+      transition: 'var(--transition)',
+      flex: 1,
+      minWidth: '140px'
+    },
+    checkoutButton: {
+      background: 'var(--primary-color)',
+      color: 'white',
+      border: 'none',
+      padding: '0.75rem 1.5rem',
+      borderRadius: 'var(--border-radius)',
+      cursor: 'pointer',
+      fontWeight: '600',
+      transition: 'var(--transition)',
+      flex: 2,
+      minWidth: '200px'
+    },
+    continueButton: {
+      background: 'transparent',
+      color: 'var(--primary-color)',
+      border: '1px solid var(--primary-color)',
+      padding: '0.75rem 1.5rem',
+      borderRadius: 'var(--border-radius)',
+      cursor: 'pointer',
+      fontWeight: '600',
+      textDecoration: 'none',
+      textAlign: 'center',
+      transition: 'var(--transition)',
+      marginTop: '1rem',
+      display: 'block',
+      width: '100%'
+    }
+  }
+
+  // Estilos para hover
+  const hoverStyles = {
+    quantityButton: { background: 'var(--primary-light)' },
+    removeButton: { 
+      background: '#ef4444', 
+      color: 'white',
+      transform: 'translateY(-1px)'
+    },
+    clearButton: { 
+      background: '#f3f4f6',
+      color: 'var(--text-dark)',
+      transform: 'translateY(-1px)'
+    },
+    checkoutButton: { 
+      background: 'var(--primary-light)',
+      transform: 'translateY(-2px)',
+      boxShadow: 'var(--shadow)'
+    },
+    continueButton: { 
+      background: 'var(--primary-color)',
+      color: 'white',
+      transform: 'translateY(-1px)'
+    },
+    cartItem: {
+      transform: 'translateY(-2px)',
+      boxShadow: 'var(--shadow)'
+    }
+  }
+
+  return (
+    <section className="cart-section" style={{ background: 'var(--bg-soft)', minHeight: '70vh' }}>
+      <div style={styles.container}>
+        <div style={styles.header}>
+          <h1 style={styles.title}>🛒 Seu Carrinho</h1>
+          {items.length > 0 && (
+            <span style={{ 
+              background: 'var(--primary-color)', 
+              color: 'white', 
+              padding: '0.5rem 1rem', 
+              borderRadius: '20px',
+              fontWeight: '600',
+              fontSize: '0.9rem'
+            }}>
+              {items.length} {items.length === 1 ? 'item' : 'itens'}
+            </span>
+          )}
+        </div>
+
+        {items.length === 0 ? (
+          <div style={styles.emptyState}>
+            <div style={styles.emptyIcon}>🛒</div>
+            <h3 style={{ color: 'var(--text-dark)', marginBottom: '1rem' }}>
+              Seu carrinho está vazio
+            </h3>
+            <p style={styles.emptyText}>
+              Adicione alguns produtos incríveis ao seu carrinho!
+            </p>
+            <button 
+              onClick={() => navigate('/produtos')}
+              style={styles.continueButton}
+              onMouseEnter={(e) => {
+                e.target.style.background = hoverStyles.continueButton.background
+                e.target.style.color = hoverStyles.continueButton.color
+                e.target.style.transform = hoverStyles.continueButton.transform
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = styles.continueButton.background
+                e.target.style.color = styles.continueButton.color
+                e.target.style.transform = 'none'
+              }}
+            >
+              Continuar Comprando
+            </button>
+          </div>
+        ) : (
+          <>
+            <div style={styles.cartItems}>
+              {items.map((item) => (
+                <div 
+                  key={item.id} 
+                  style={styles.cartItem}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = hoverStyles.cartItem.transform
+                    e.currentTarget.style.boxShadow = hoverStyles.cartItem.boxShadow
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'none'
+                    e.currentTarget.style.boxShadow = styles.cartItem.boxShadow
+                  }}
+                >
+                  <img
+                    src={resolveProductImage(item)}
+                    onError={onImgError}
+                    alt={item.nome}
+                    loading="lazy"
+                    decoding="async"
+                    style={styles.itemImage}
+                  />
+                  <div style={styles.itemDetails}>
+                    <div style={styles.itemName}>{item.nome}</div>
+                    <div style={styles.itemPrice}>
+                      {item.preco.toLocaleString('pt-MZ', { 
+                        style: 'currency', 
+                        currency: 'MZN' 
+                      })}
+                    </div>
+                  </div>
+                  <div style={styles.itemActions}>
+                    <div style={styles.quantityControls}>
+                      <button 
+                        onClick={() => decrement(item.id)}
+                        style={styles.quantityButton}
+                        onMouseEnter={(e) => {
+                          e.target.style.background = hoverStyles.quantityButton.background
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.background = styles.quantityButton.background
+                        }}
+                      >
+                        -
+                      </button>
+                      <span style={styles.quantityDisplay}>{item.quantity}</span>
+                      <button 
+                        onClick={() => increment(item.id)}
+                        style={styles.quantityButton}
+                        onMouseEnter={(e) => {
+                          e.target.style.background = hoverStyles.quantityButton.background
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.background = styles.quantityButton.background
+                        }}
+                      >
+                        +
+                      </button>
+                    </div>
+                    <button 
+                      onClick={() => remove(item.id)}
+                      style={styles.removeButton}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = hoverStyles.removeButton.background
+                        e.target.style.color = hoverStyles.removeButton.color
+                        e.target.style.transform = hoverStyles.removeButton.transform
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = styles.removeButton.background
+                        e.target.style.color = styles.removeButton.color
+                        e.target.style.transform = 'none'
+                      }}
+                    >
+                      Remover
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={styles.cartSummary}>
+              <div style={styles.totalRow}>
+                <span style={styles.totalLabel}>Total:</span>
+                <span style={styles.totalAmount}>
+                  {total.toLocaleString('pt-MZ', { 
+                    style: 'currency', 
+                    currency: 'MZN' 
+                  })}
+                </span>
+              </div>
+              
+              <div style={styles.actionButtons}>
+                <button 
+                  onClick={clear}
+                  style={styles.clearButton}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = hoverStyles.clearButton.background
+                    e.target.style.color = hoverStyles.clearButton.color
+                    e.target.style.transform = hoverStyles.clearButton.transform
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = styles.clearButton.background
+                    e.target.style.color = styles.clearButton.color
+                    e.target.style.transform = 'none'
+                  }}
+                >
+                  Limpar Carrinho
+                </button>
+                <button 
+                  onClick={() => navigate('/checkout')}
+                  style={styles.checkoutButton}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = hoverStyles.checkoutButton.background
+                    e.target.style.transform = hoverStyles.checkoutButton.transform
+                    e.target.style.boxShadow = hoverStyles.checkoutButton.boxShadow
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = styles.checkoutButton.background
+                    e.target.style.transform = 'none'
+                    e.target.style.boxShadow = 'none'
+                  }}
+                >
+                  Finalizar Compra
+                </button>
+              </div>
+
+              <button 
+                onClick={() => navigate('/produtos')}
+                style={styles.continueButton}
+                onMouseEnter={(e) => {
+                  e.target.style.background = hoverStyles.continueButton.background
+                  e.target.style.color = hoverStyles.continueButton.color
+                  e.target.style.transform = hoverStyles.continueButton.transform
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = styles.continueButton.background
+                  e.target.style.color = styles.continueButton.color
+                  e.target.style.transform = 'none'
+                }}
+              >
+                Continuar Comprando
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </section>
+  )
+}

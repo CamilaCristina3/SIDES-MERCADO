@@ -1,0 +1,45 @@
+# Node/Vite outputs
+node_modules/
+dist/
+dist-ssr/
+dist.zip
+.vite/
+node_modules/.vite/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Env files (keep examples tracked)
+.env
+.env.*
+!.env.example
+
+# Editor/OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Caches
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Tests/coverage
+coverage/
+*.lcov
+
+# Archives
+*.tar.gz
+*.tgz
+
+# Optional: ignore local uploads if not versioning assets
+# public/uploads/
+# public/uploads/images/
+
+# Note: keep .htaccess tracked (used for SPA routing on cPanel)
