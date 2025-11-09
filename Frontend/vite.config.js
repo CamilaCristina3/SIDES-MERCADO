@@ -3,7 +3,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react()],\n  optimizeDeps: { esbuildOptions: { loader: { '.js': 'jsx' } } },\n  esbuild: { loader: 'jsx', jsx: 'automatic' },
   // Base URL for assets when deployed under a domain root.
   // If you deploy under a subfolder (e.g. example.com/app/),
   // change to base: '/app/' and rebuild.
@@ -39,3 +39,4 @@ export default defineConfig({
     }
   }
 })
+
