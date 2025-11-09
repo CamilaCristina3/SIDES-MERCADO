@@ -1,1 +1,2 @@
-export * from './CartContext.jsx'\n
+export { default } from './CartContext.jsx';
+export * from './CartContext.jsx';
