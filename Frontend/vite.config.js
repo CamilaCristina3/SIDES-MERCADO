@@ -2,23 +2,34 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+// Set VITE_HMR_OVERLAY=false to disable error overlay during dev
+const DISABLE_OVERLAY = process.env.VITE_HMR_OVERLAY === 'false'
+
 export default defineConfig({
-  plugins: [react()],\n  optimizeDeps: { esbuildOptions: { loader: { '.js': 'jsx' } } },\n  esbuild: { loader: 'jsx', jsx: 'automatic' },
-  // Base URL for assets when deployed under a domain root.
-  // If you deploy under a subfolder (e.g. example.com/app/),
-  // change to base: '/app/' and rebuild.
   base: '/',
+  plugins: [react()],
+  // Ensure esbuild treats JSX inside .js during dep scan
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: { '.js': 'jsx' }
+    }
+  },
+  // Ensure dev/build transforms accept JSX in .js
+  esbuild: {
+    loader: 'jsx',
+    jsx: 'automatic'
+  },
   server: {
     port: 5173,
-    host: true, // Permite acesso externo
-    open: false, // Não abre o navegador automaticamente
+    host: true,
+    open: false,
+    hmr: { overlay: DISABLE_OVERLAY ? false : true },
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true,
         secure: false
-      },
-      // Note: do not proxy static uploads in dev; serve from /public instead
+      }
     }
   },
   build: {
@@ -32,11 +43,9 @@ export default defineConfig({
       }
     }
   },
-  // Resolver problemas comuns de importação
   resolve: {
     alias: {
       '@': '/src'
     }
   }
 })
-
