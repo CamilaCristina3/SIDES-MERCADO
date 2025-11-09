@@ -8,19 +8,7 @@ const DISABLE_OVERLAY = process.env.VITE_HMR_OVERLAY === 'false'
 
 export default defineConfig({
   base: '/',
-  plugins: [
-    {
-      name: 'treat-js-as-jsx',
-      enforce: 'pre',
-      transform(code, id) {
-        const file = id.split('?')[0].replace(/\\\\/g, '/');
-        if (file.endsWith('.js') && file.includes('/src/')) {
-          const out = transformSync(code, { loader: 'jsx', jsx: 'automatic', sourcemap: true })
-          return { code: out.code, map: out.map }
-        }
-        return null
-      },
-    },
+  plugins: [},
     react(),
   ],
   optimizeDeps: {
@@ -62,3 +50,4 @@ export default defineConfig({
     }
   }
 })
+
