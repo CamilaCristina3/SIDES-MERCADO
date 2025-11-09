@@ -1,20 +1,33 @@
 // frontend/vite.config.js
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { transformSync } from 'esbuild'
 
 // Set VITE_HMR_OVERLAY=false to disable error overlay during dev
 const DISABLE_OVERLAY = process.env.VITE_HMR_OVERLAY === 'false'
 
 export default defineConfig({
   base: '/',
-  plugins: [react()],
-  // Ensure esbuild treats JSX inside .js during dep scan
+  plugins: [
+    {
+      name: 'treat-js-as-jsx',
+      enforce: 'pre',
+      transform(code, id) {
+        const file = id.split('?')[0].replace(/\\\\/g, '/');
+        if (file.endsWith('.js') && file.includes('/src/')) {
+          const out = transformSync(code, { loader: 'jsx', jsx: 'automatic', sourcemap: true })
+          return { code: out.code, map: out.map }
+        }
+        return null
+      },
+    },
+    react(),
+  ],
   optimizeDeps: {
     esbuildOptions: {
       loader: { '.js': 'jsx' }
     }
   },
-  // Ensure dev/build transforms accept JSX in .js
   esbuild: {
     loader: 'jsx',
     jsx: 'automatic'
