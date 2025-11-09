@@ -123,52 +123,35 @@ O SIDES Mercado é composto por **duas camadas principais**:
 
 ## 🧱 Estrutura das Pastas
 
-```
+`
 SIDES/
 ├── Frontend/
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   ├── context/
-│   │   │   └── CartContext.jsx
-│   │   ├── components/
-│   │   │   ├── ChatWidget.jsx
-│   │   │   ├── NovoProduto.jsx
-│   │   │   └── UploadImagem.jsx
-│   │   ├── data/
-│   │   │   └── mockProducts.js
-│   │   ├── pages/
-│   │   │   ├── Home.jsx
-│   │   │   ├── Produtos.jsx
-│   │   │   ├── Carrinho.jsx
-│   │   │   ├── Checkout.jsx
-│   │   │   ├── AdminUpload.jsx
-│   │   │   ├── ClienteRegister.jsx
-│   │   │   └── Sobre.jsx
-│   │   └── utils/
-│   │       ├── imageUrl.js
-│   │       └── SIDES LOGO DESIGN.svg
-│   └── vite.config.js
-└── Backend/
-    ├── config/
-    │   └── database.js
-    ├── controllers/
-    │   ├── produtoController.js
-    │   ├── uploadController.js
-    │   └── ...
-    ├── middleware/
-    │   └── auth.js
-    ├── models/
-    │   ├── Produto.js
-    │   ├── Categoria.js
-    │   └── ...
-    ├── routes/
-    │   ├── produtoRoutes.js
-    │   ├── uploadRoutes.js
-    │   └── ...
-    ├── uploads/images/
-    └── server.js
-```
+│   └── src/
+│       ├── App.js
+│       ├── main.jsx
+│       ├── components/
+│       │   ├── Header.js
+│       │   └── Footer.js
+│       ├── context/
+│       │   ├── CartContext.js
+│       │   ├── HelpContext.js
+│       │   └── CategoryContext.js
+│       └── pages/
+│           ├── Home.js
+│           ├── Sobre.js
+│           ├── Produtos.js
+│           ├── ProdutorCadastro.js
+│           └── Solucoes.js
+├── Backend/
+│   ├── config/
+│   │   └── database.js
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── uploads/images/
+│   └── server.js
+`
 
 ---
 
@@ -279,4 +262,5 @@ Uso académico e de inovação social — todos os direitos reservados.
 ✅ Mostra a **estrutura técnica completa**  
 ✅ É elegante e **profissional para GitHub, incubadoras e portfólios**  
 ✅ Usa um tom que reflete **inovação, propósito e tecnologia sustentável**
+
 
