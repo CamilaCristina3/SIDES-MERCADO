@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useCart } from '../context/CartContext.jsx'
+import { useCart } from '../context/CartContext.js'
 import { imageUrl, onImgError } from '../utils/imageUrl'
 
 export default function Carrinho() {
@@ -48,3 +48,4 @@ export default function Carrinho() {
     </section>
   )
 }
+

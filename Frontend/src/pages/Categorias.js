@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { mockProducts } from '../data/products'
 import { imageUrl, onImgError } from '../utils/imageUrl'
-import { useCart } from '../context/CartContext.jsx'
+import { useCart } from '../context/CartContext.js'
 
 export default function Categorias() {
   const { addItem } = useCart()
@@ -55,3 +55,4 @@ export default function Categorias() {
     </>
   )
 }
+

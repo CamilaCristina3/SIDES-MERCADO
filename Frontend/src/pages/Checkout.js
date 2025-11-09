@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useCart } from '../context/CartContext.jsx'
+import { useCart } from '../context/CartContext.js'
 
 export default function Checkout() {
   const { items, total, clear } = useCart()
@@ -108,4 +108,5 @@ export default function Checkout() {
     </section>
   )
 }
+
 

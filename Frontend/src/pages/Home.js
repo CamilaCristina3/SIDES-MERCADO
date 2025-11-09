@@ -1,9 +1,33 @@
 import React from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { mockProducts } from '../data/mockProducts'
-import { onImgError } from '../utils/imageUrl'
-import { resolveProductImage } from '../utils/resolveImage'
 import { useCart } from '../context/CartContext.js'
+
+const mockProducts = [
+  {
+    id: 1,
+    nome: 'Tomate Fresco',
+    preco: 45.00,
+    imagem: null,
+    categoria: 'Hortícolas',
+    disponivel: true
+  },
+  {
+    id: 2,
+    nome: 'Cebola',
+    preco: 35.00,
+    imagem: null,
+    categoria: 'Hortícolas',
+    disponivel: true
+  },
+  {
+    id: 3,
+    nome: 'Alface',
+    preco: 25.00,
+    imagem: null,
+    categoria: 'Hortícolas',
+    disponivel: true
+  }
+]
 
 export default function Home() {
   const navigate = useNavigate()
@@ -11,13 +35,13 @@ export default function Home() {
 
   return (
     <>
-      <section className="hero home-hero">
-        <div className="container home-hero-inner">
-          <div className="home-hero-content">
-            <span className="home-badge">🌱 Plataforma 100% Moçambicana</span>
+      <section className="hero">
+        <div className="container hero-inner">
+          <div className="hero-content">
+            <span className="badge">🌱 Plataforma 100% Moçambicana</span>
             <h2>Conectamos Agricultores Locais com Compradores em Todo Moçambique</h2>
             <p>Mercado digital que valoriza produtos nacionais, promove comércio justo e fortalece a economia local.</p>
-            <div className="home-hero-actions">
+            <div className="hero-actions">
               <button className="cta-button primary" onClick={() => navigate('/produtos')}>
                 🛒 Explorar Produtos
               </button>
@@ -28,16 +52,16 @@ export default function Home() {
                 📖 Sobre Nós
               </button>
             </div>
-            <div className="home-hero-kpis">
-              <div className="home-kpi">
+            <div className="hero-kpis">
+              <div className="kpi">
                 <strong>200+</strong>
                 <span>Agricultores</span>
               </div>
-              <div className="home-kpi">
+              <div className="kpi">
                 <strong>1.5k+</strong>
                 <span>Clientes Satisfeitos</span>
               </div>
-              <div className="home-kpi">
+              <div className="kpi">
                 <strong>5k+</strong>
                 <span>Entregas Realizadas</span>
               </div>
@@ -46,73 +70,58 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="how-section home-how-section">
+      <section className="how-section">
         <div className="container">
           <div className="section-header">
             <h2>Como Funciona na Prática</h2>
             <p>Processo simples pensado para a realidade moçambicana</p>
           </div>
-          <div className="home-how-cards">
-            <div className="home-how-card" role="article">
-              <div className="home-how-icon" aria-hidden>🌱</div>
+          <div className="how-cards">
+            <div className="how-card" role="article">
+              <div className="how-icon" aria-hidden>🌱</div>
               <h3>Agricultor Regista-se</h3>
               <p>Produtores locais criam conta e disponibilizam produtos frescos diretamente na plataforma.</p>
             </div>
-            <div className="home-how-card" role="article">
-              <div className="home-how-icon" aria-hidden>🛒</div>
+            <div className="how-card" role="article">
+              <div className="how-icon" aria-hidden>🛒</div>
               <h3>Cliente Compra</h3>
               <p>Explore, compare e adquira produtos com total segurança e transparência.</p>
             </div>
-            <div className="home-how-card" role="article">
-              <div className="home-how-icon" aria-hidden>🚚</div>
+            <div className="how-card" role="article">
+              <div className="how-icon" aria-hidden>🚚</div>
               <h3>Entrega Rápida</h3>
               <p>Receba produtos frescos em casa ou retire nos pontos de recolha parceiros.</p>
             </div>
           </div>
-          
-          <div className="section-header">
-            <p style={{ color: 'var(--text-light)', marginBottom: '16px' }}>
-              Quer conhecer melhor a nossa história e impacto em Moçambique?
-            </p>
-            <button 
-              className="cta-button primary" 
-              onClick={() => navigate('/sobre')}
-            >
-              📚 Conheça a Nossa História
-            </button>
-          </div>
         </div>
       </section>
 
-      <section className="products-section home-products-section">
+      <section className="products-section">
         <div className="container">
           <div className="section-header">
-            <div>
-              <h2>Produtos em Destaque</h2>
-              <p>Produtos frescos diretamente de agricultores moçambicanos</p>
-            </div>
-            <Link to="/produtos" className="home-icon-btn" aria-label="Ver todos os produtos">
-              Ver todos →
-            </Link>
+            <h2>Produtos em Destaque</h2>
+            <p>Produtos frescos diretamente de agricultores moçambicanos</p>
           </div>
-          <div className="home-products-grid">
-            {mockProducts.slice(0, 6).map((product) => (
-              <div key={product.id} className="home-product-card">
-                <div className="home-product-image">
+          <div className="products-grid">
+            {mockProducts.map((product) => (
+              <div key={product.id} className="product-card">
+                <div className="product-image">
                   <img 
-                    src={resolveProductImage(product)} 
-                    onError={onImgError} 
-                    alt={product.nome} 
+                    src={product.imagem || '/images/placeholder.jpg'} 
+                    alt={product.nome}
+                    onError={(e) => {
+                      e.target.src = '/images/placeholder.jpg'
+                    }}
                   />
                 </div>
-                <div className="home-product-info">
-                  <h3 className="home-product-name">{product.nome}</h3>
-                  <div className="home-product-footer">
-                    <div className="home-product-price">
+                <div className="product-info">
+                  <h3 className="product-name">{product.nome}</h3>
+                  <div className="product-footer">
+                    <div className="product-price">
                       {product.preco.toLocaleString('pt-MZ', { style: 'currency', currency: 'MZN' })}
                     </div>
                     <button 
-                      className="home-add-to-cart-btn" 
+                      className="add-to-cart-btn" 
                       onClick={() => addItem(product)}
                     >
                       🛒 Adicionar
@@ -121,25 +130,6 @@ export default function Home() {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="cta-section">
-        <div className="container">
-          <div className="cta-content">
-            <h2>Pronto para Fazer Parte Desta Mudança?</h2>
-            <p>
-              Junte-se à comunidade que está a transformar a agricultura em Moçambique através da tecnologia.
-            </p>
-            <div className="cta-actions">
-              <button className="cta-button primary" onClick={() => navigate('/produtos')}>
-                🛒 Começar a Comprar
-              </button>
-              <button className="cta-button secondary" onClick={() => navigate('/sobre')}>
-                📖 Conhecer a SIDES
-              </button>
-            </div>
           </div>
         </div>
       </section>
