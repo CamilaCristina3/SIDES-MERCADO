@@ -78,7 +78,7 @@ body {
 .hero { 
   color: var(--white); 
   padding: 4rem 0 5rem; 
-# removed by restore: background-image
+/* background-image removed to avoid conflict with Home.js */
   background-size: cover; 
   background-position: center; 
   border-radius: 18px; 
@@ -893,3 +893,4 @@ body {
   .hero-content h2, .sobre-hero h1 { font-size: 1.8rem; }
   .home-hero h2 { font-size: 1.8rem; }
 }
+
